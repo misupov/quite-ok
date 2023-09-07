@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "moduleResolution": "NodeNext"
+  },
+  "extends": ["./tsconfig.json"],
+  "include": ["rollup.config.ts"]
+}

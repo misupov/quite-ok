@@ -1,3 +1,6 @@
+.turbo
+.DS_store
+
 # Logs
 logs
 *.log

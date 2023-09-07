@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "Bundler",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "rootDir": "src",
+  },
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "include": ["src/**/*"]
+}

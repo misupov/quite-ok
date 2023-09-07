@@ -1,0 +1,31 @@
+{
+  "name": "@quite-ok/scrollbar-react",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
+    "dev": "rollup --watch --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Mikhail Isupov",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.3",
+    "@types/react": "^18.2.15",
+    "react": "^18.2.0",
+    "rollup": "^3.29.0",
+    "rollup-plugin-typescript2": "^0.35.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@quite-ok/scrollbar": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  }
+}
