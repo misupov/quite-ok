@@ -1,4 +1,4 @@
-import EventEmitter from "eventemitter3";
+import { EventEmitter } from "eventemitter3";
 import iconBoth from "./scroll-icons/both.svg";
 import iconVertical from "./scroll-icons/vertical.svg";
 import iconHorizontal from "./scroll-icons/horizontal.svg";
@@ -84,13 +84,15 @@ export class ScrollPane {
 
   refreshThumbs = () => {
     if (this.viewportSize && this.scrollSize) {
-      this.vscroll.updateGeometry(
-        this.viewportOffset.y / this.scrollSize.height,
-        this.viewportSize.height / this.scrollSize.height
-      );
       this.hscroll.updateGeometry(
-        this.viewportOffset.x / this.scrollSize.width,
-        this.viewportSize.width / this.scrollSize.width
+        this.viewportOffset.x,
+        this.scrollSize.width,
+        this.viewportSize.width
+      );
+      this.vscroll.updateGeometry(
+        this.viewportOffset.y,
+        this.scrollSize.height,
+        this.viewportSize.height
       );
     }
   };

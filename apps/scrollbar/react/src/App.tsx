@@ -10,7 +10,7 @@ function App() {
       <div
         style={{ width: 400, height: 400, display: "grid", overflow: "hidden" }}
       >
-        <ScrollBar scrollWidth={10000} scrollHeight={1000}>
+        <ScrollBar scrollWidth={10000} scrollHeight={10000}>
           <div>asd</div>
         </ScrollBar>
       </div>

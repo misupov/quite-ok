@@ -47,7 +47,17 @@ export class ScrollBar {
     this.container.removeChild(this.track);
   }
 
-  updateGeometry(offset: number, size: number) {
+  updateGeometry(
+    viewportOffset: number,
+    scrollSize: number,
+    viewportSize: number
+  ) {
+    viewportOffset = Math.min(viewportOffset, scrollSize - viewportSize);
+    let offset = viewportOffset / scrollSize;
+    offset = Math.max(offset, 0);
+
+    const size = viewportSize / scrollSize;
+
     if (this.dir === "v") {
       this.thumb.style.top = `${offset * 100}%`;
       this.thumb.style.height = `max(10px, ${size * 100}%)`;
