@@ -1,25 +1,32 @@
+import panWest from "./cursors/pan_west.cur";
+import panSouthWest from "./cursors/pan_south_west.cur";
+import panSouth from "./cursors/pan_south.cur";
+import panSouthEast from "./cursors/pan_south_east.cur";
+import panEast from "./cursors/pan_east.cur";
+import panNorthEast from "./cursors/pan_north_east.cur";
+import panNorth from "./cursors/pan_north.cur";
+import panNorthWest from "./cursors/pan_north_west.cur";
+
 export function getCursorByAngle(rad: number) {
-  let direction;
   if (rad <= Math.PI * (-7 / 8)) {
-    direction = "w";
+    return `url(${panWest}), auto`;
   } else if (rad <= Math.PI * (-5 / 8)) {
-    direction = "sw";
+    return `url(${panSouthWest}), auto`;
   } else if (rad <= Math.PI * (-3 / 8)) {
-    direction = "s";
+    return `url(${panSouth}), auto`;
   } else if (rad <= Math.PI * (-1 / 8)) {
-    direction = "se";
+    return `url(${panSouthEast}), auto`;
   } else if (rad <= Math.PI * (1 / 8)) {
-    direction = "e";
+    return `url(${panEast}), auto`;
   } else if (rad <= Math.PI * (3 / 8)) {
-    direction = "ne";
+    return `url(${panNorthEast}), auto`;
   } else if (rad <= Math.PI * (5 / 8)) {
-    direction = "n";
+    return `url(${panNorth}), auto`;
   } else if (rad <= Math.PI * (7 / 8)) {
-    direction = "nw";
+    return `url(${panNorthWest}), auto`;
   } else {
-    direction = "w";
+    return `url(${panWest}), auto`;
   }
-  return `${direction}-resize`;
 }
 
 export function hypoth(x: number, y: number) {

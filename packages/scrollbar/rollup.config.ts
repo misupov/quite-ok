@@ -1,6 +1,6 @@
 import { defineConfig } from "rollup";
 import typescript from "rollup-plugin-typescript2";
-import svg from "rollup-plugin-svg-import";
+import url from "@rollup/plugin-url";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 
@@ -15,6 +15,6 @@ export default defineConfig({
     commonjs(),
     nodeResolve(),
     typescript({ tsconfig: "tsconfig.json" }),
-    svg({ stringify: true }),
+    url({ limit: 1024 * 1024, include: ["**/*.svg", "**/*.cur"] }),
   ],
 });

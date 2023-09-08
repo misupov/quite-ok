@@ -9,7 +9,7 @@
     "declarationDir": "dist",
     "preserveSymlinks": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["./svg.d.ts"]
+    "types": ["./data-url.d.ts"]
   },
   "references": [{"path": "./tsconfig.node.json"}],
   "include": ["src/**/*"]

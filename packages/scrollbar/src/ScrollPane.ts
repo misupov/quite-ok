@@ -44,9 +44,7 @@ export class ScrollPane {
     this.target = target;
     this.resizeObserver = resizeObserver;
 
-    this.iconBothUrl = URL.createObjectURL(
-      new Blob([iconBoth], { type: "image/svg+xml" })
-    );
+    this.iconBothUrl = iconBoth;
     this.iconVerticalUrl = URL.createObjectURL(
       new Blob([iconVertical], { type: "image/svg+xml" })
     );
