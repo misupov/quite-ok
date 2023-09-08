@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { ScrollBar } from "@quite-ok/scrollbar-react";
+import { ScrollPanel } from "@quite-ok/scrollpanel-react";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -10,9 +10,9 @@ function App() {
       <div
         style={{ width: 400, height: 400, display: "grid", overflow: "hidden" }}
       >
-        <ScrollBar scrollWidth={10000} scrollHeight={10000}>
+        <ScrollPanel scrollWidth={10000} scrollHeight={10000}>
           <div>asd</div>
-        </ScrollBar>
+        </ScrollPanel>
       </div>
       <h1>Vite + React</h1>
       <div className="card">

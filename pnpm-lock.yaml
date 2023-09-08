@@ -16,11 +16,11 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
 
-  apps/scrollbar/react:
+  apps/scrollpane/react:
     dependencies:
-      '@quite-ok/scrollbar-react':
+      '@quite-ok/scrollpanel-react':
         specifier: workspace:^
-        version: link:../../../packages/scrollbar-react
+        version: link:../../../packages/scrollpanel-react
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -59,11 +59,11 @@ importers:
         specifier: ^4.4.5
         version: 4.4.9
 
-  apps/scrollbar/vanilla:
+  apps/scrollpane/vanilla:
     dependencies:
-      '@quite-ok/scrollbar':
+      '@quite-ok/scrollpanel':
         specifier: workspace:^
-        version: link:../../../packages/scrollbar
+        version: link:../../../packages/scrollpane
     devDependencies:
       '@rollup/plugin-html':
         specifier: ^1.0.2
@@ -81,7 +81,7 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2
 
-  packages/scrollbar:
+  packages/scrollpane:
     dependencies:
       eventemitter3:
         specifier: ^5.0.1
@@ -112,11 +112,11 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2
 
-  packages/scrollbar-react:
+  packages/scrollpanel-react:
     dependencies:
-      '@quite-ok/scrollbar':
+      '@quite-ok/scrollpanel':
         specifier: workspace:^
-        version: link:../scrollbar
+        version: link:../scrollpane
     devDependencies:
       '@rollup/plugin-typescript':
         specifier: ^11.1.3

@@ -15,7 +15,7 @@ type Size = {
   height: number;
 };
 
-export class ScrollPane {
+export class ScrollPanel {
   private readonly iconBothUrl: string;
   private readonly iconVerticalUrl: string;
   private readonly iconHorizontalUrl: string;

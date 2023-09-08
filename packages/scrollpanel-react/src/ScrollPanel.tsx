@@ -1,35 +1,35 @@
-import { ScrollPane as VanillaScrollPane } from "@quite-ok/scrollbar";
+import { ScrollPanel as VanillaScrollPanel } from "@quite-ok/scrollpanel";
 import { ReactElement, useLayoutEffect, useRef } from "react";
 
-export type ScrollBarProps = {
+export type ScrollPanelProps = {
   scrollWidth: number;
   scrollHeight: number;
   children: ReactElement;
 };
 
-export function ScrollBar({
+export function ScrollPanel({
   scrollWidth,
   scrollHeight,
   children,
-}: ScrollBarProps) {
+}: ScrollPanelProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const targetRef = useRef<HTMLDivElement>(null);
-  const scrollbarRef = useRef<VanillaScrollPane>();
+  const scrollpanelRef = useRef<VanillaScrollPanel>();
   useLayoutEffect(() => {
     if (containerRef.current && targetRef.current) {
-      scrollbarRef.current = new VanillaScrollPane(
+      scrollpanelRef.current = new VanillaScrollPanel(
         containerRef.current,
         targetRef.current
       );
       return () => {
-        scrollbarRef.current?.destroy();
-        scrollbarRef.current = undefined;
+        scrollpanelRef.current?.destroy();
+        scrollpanelRef.current = undefined;
       };
     }
   }, []);
 
   useLayoutEffect(() => {
-    scrollbarRef.current?.setScrollArea(scrollWidth, scrollHeight);
+    scrollpanelRef.current?.setScrollArea(scrollWidth, scrollHeight);
   }, [scrollWidth, scrollHeight]);
 
   return (
