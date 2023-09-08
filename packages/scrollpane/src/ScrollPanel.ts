@@ -150,6 +150,7 @@ export class ScrollPanel {
         this.viewportOffset.y += deltaY;
         this.refreshThumbs();
       });
+      fullScreenDiv.style.cursor = "none";
       fullScreenDiv.onmousemove = (e) => {
         deltaX = (e.clientX - startX) / 10;
         deltaY = (e.clientY - startY) / 10;
@@ -157,7 +158,7 @@ export class ScrollPanel {
         if (hypoth(deltaX, deltaY) > 1) {
           fullScreenDiv.style.cursor = getCursorByAngle(rad);
         } else {
-          fullScreenDiv.style.cursor = "default";
+          fullScreenDiv.style.cursor = "none";
         }
       };
       const body = document.body ? document.body : document.documentElement;
