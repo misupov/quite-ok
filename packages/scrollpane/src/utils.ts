@@ -7,26 +7,29 @@ import panNorthEast from "./cursors/pan_north_east.cur";
 import panNorth from "./cursors/pan_north.cur";
 import panNorthWest from "./cursors/pan_north_west.cur";
 
-export function getCursorByAngle(rad: number) {
-  if (rad <= Math.PI * (-7 / 8)) {
-    return `url(${panWest}), auto`;
-  } else if (rad <= Math.PI * (-5 / 8)) {
-    return `url(${panSouthWest}), auto`;
-  } else if (rad <= Math.PI * (-3 / 8)) {
-    return `url(${panSouth}), auto`;
-  } else if (rad <= Math.PI * (-1 / 8)) {
-    return `url(${panSouthEast}), auto`;
-  } else if (rad <= Math.PI * (1 / 8)) {
-    return `url(${panEast}), auto`;
-  } else if (rad <= Math.PI * (3 / 8)) {
-    return `url(${panNorthEast}), auto`;
-  } else if (rad <= Math.PI * (5 / 8)) {
-    return `url(${panNorth}), auto`;
-  } else if (rad <= Math.PI * (7 / 8)) {
-    return `url(${panNorthWest}), auto`;
+export function getCursorByAngle(angleRad: number) {
+  const angle = angleRad / Math.PI;
+  let result: string;
+  if (angle <= -7 / 8) {
+    result = panWest;
+  } else if (angle <= -5 / 8) {
+    result = panSouthWest;
+  } else if (angle <= -3 / 8) {
+    result = panSouth;
+  } else if (angle <= -1 / 8) {
+    result = panSouthEast;
+  } else if (angle <= 1 / 8) {
+    result = panEast;
+  } else if (angle <= 3 / 8) {
+    result = panNorthEast;
+  } else if (angle <= 5 / 8) {
+    result = panNorth;
+  } else if (angle <= 7 / 8) {
+    result = panNorthWest;
   } else {
-    return `url(${panWest}), auto`;
+    result = panWest;
   }
+  return `url(${result}), auto`;
 }
 
 export function hypoth(x: number, y: number) {
