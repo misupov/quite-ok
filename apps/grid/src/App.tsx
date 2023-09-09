@@ -34,24 +34,7 @@ class DataSource implements GridDataSource<Item> {
 
   init(gridApi: GridApi<Item>): void {
     this.gridApi = gridApi;
-    this.gridApi.setRowCount(10000000);
-    // const fill = () => {
-    //   const data: Record<number, Item> = {};
-    //   for (let i = 0; i < 10000000; i++) {
-    //     // data[i] = { a: Math.random().toString(), b: i.toString() };
-    //     data[i] = {
-    //       a: i.toString() + " " + Math.random().toString(),
-    //       b: i.toString(),
-    //     };
-    //   }
-    //   gridApi.setRowData(data);
-    //   gridApi.setRowCount(10000000);
-    //   // gridApi.setRowCount(Math.ceil(Math.random() * 1000));
-    // };
-    // this.timer = setInterval(() => {
-    //   fill();
-    // }, 100000);
-    // fill();
+    this.gridApi.setRowCount(100000);
   }
   destroy() {
     clearInterval(this.timer);
@@ -82,8 +65,6 @@ class DataSource implements GridDataSource<Item> {
       };
     }
     this.gridApi.setRowData(data);
-    this.gridApi.setRowCount(1000000000);
-    // console.info(firstVisibleRow);
   }
 }
 

@@ -99,7 +99,12 @@ export function Grid<T = unknown>({
                 // border: "1px solid red",
               }}
             >
-              {String(cd.field && item[cd.field]) ?? ""}
+              {cd.renderer
+                ? cd.renderer({
+                    item,
+                    value: item[cd.field!] as keyof T,
+                  })
+                : String(cd.field && item[cd.field]) ?? ""}
             </div>
           ))}
         </div>

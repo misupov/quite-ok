@@ -21,7 +21,7 @@ export const countries = [
   { country: "Belgium", continent: "Europe", language: "French" },
 ];
 
-export const COUNTRY_CODES = {
+export const COUNTRY_CODES: Record<string, string> = {
   Ireland: "ie",
   Luxembourg: "lu",
   Belgium: "be",

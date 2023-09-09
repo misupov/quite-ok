@@ -15,6 +15,6 @@ export default defineConfig({
     commonjs(),
     nodeResolve(),
     typescript({ tsconfig: "tsconfig.json" }),
-    url({ limit: 1024 * 1024, include: ["**/*.svg", "**/*.cur"] }),
+    url({ limit: 1024 * 1024 }),
   ],
 });

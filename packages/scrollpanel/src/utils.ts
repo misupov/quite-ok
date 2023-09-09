@@ -1,11 +1,11 @@
-import panWest from "./cursors/pan_west.cur";
-import panSouthWest from "./cursors/pan_south_west.cur";
-import panSouth from "./cursors/pan_south.cur";
-import panSouthEast from "./cursors/pan_south_east.cur";
-import panEast from "./cursors/pan_east.cur";
-import panNorthEast from "./cursors/pan_north_east.cur";
-import panNorth from "./cursors/pan_north.cur";
-import panNorthWest from "./cursors/pan_north_west.cur";
+import panWest from "./cursors/pan_west.png";
+import panSouthWest from "./cursors/pan_south_west.png";
+import panSouth from "./cursors/pan_south.png";
+import panSouthEast from "./cursors/pan_south_east.png";
+import panEast from "./cursors/pan_east.png";
+import panNorthEast from "./cursors/pan_north_east.png";
+import panNorth from "./cursors/pan_north.png";
+import panNorthWest from "./cursors/pan_north_west.png";
 
 export function getCursorByAngle(angleRad: number) {
   const angle = angleRad / Math.PI;
@@ -29,7 +29,7 @@ export function getCursorByAngle(angleRad: number) {
   } else {
     result = panWest;
   }
-  return `url(${result}), auto`;
+  return `url(${result}) 16 16, auto`;
 }
 
 export function hypoth(x: number, y: number) {
