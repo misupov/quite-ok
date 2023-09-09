@@ -1,4 +1,4 @@
-import { ScrollPanel } from "@quite-ok/scrollpanel";
+import { ScrollPanel } from "../../../../packages/scrollpanel/dist";
 
 const root = document.createElement("div");
 document.body.appendChild(root);
