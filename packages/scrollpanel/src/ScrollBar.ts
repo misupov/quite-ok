@@ -121,7 +121,7 @@ export class ScrollBar {
 
     const size = viewportSize / scrollSize;
 
-    const gridTemplate = `${viewportOffset}fr max(40px, ${size * 100}%) ${
+    const gridTemplate = `${viewportOffset}fr max(20px, ${size * 100}%) ${
       scrollSize - (viewportOffset + viewportSize)
     }fr`;
     const trackPadding = twoAxis ? "10px" : "0";

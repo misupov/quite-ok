@@ -20,9 +20,9 @@ function App() {
         <ScrollPanel
           scrollWidth={2000}
           scrollHeight={2000}
-          onViewportChange={(x, y) => {
-            setX(-x);
-            setY(-y);
+          onViewportChange={(e) => {
+            setX(-e.x);
+            setY(-e.y);
           }}
         >
           <div style={{ position: "absolute", left: x, top: y }}>

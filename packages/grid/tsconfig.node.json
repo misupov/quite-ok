@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "types": ["node"]
+  },
+  "extends": ["./tsconfig.json"],
+  "include": ["rollup.config.ts", ".eslintrc.js"]
+}

@@ -1,15 +1,19 @@
 import { ScrollPanel as VanillaScrollPanel } from "@quite-ok/scrollpanel";
 import { ReactElement, useLayoutEffect, useRef } from "react";
 
+export type ViewportChangeEvent = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+export type ViewportChangeEventHandler = (event: ViewportChangeEvent) => void;
+
 export type ScrollPanelProps = {
   scrollWidth: number;
   scrollHeight: number;
-  onViewportChange: (
-    x: number,
-    y: number,
-    width: number,
-    height: number
-  ) => void;
+  onViewportChange: ViewportChangeEventHandler;
   children: ReactElement;
 };
 
@@ -29,14 +33,14 @@ export function ScrollPanel({
         targetRef.current
       );
       scrollpanelRef.current.on("viewportchange", (e) => {
-        onViewportChange(e.x, e.y, e.width, e.height);
+        onViewportChange(e);
       });
       return () => {
         scrollpanelRef.current?.destroy();
         scrollpanelRef.current = undefined;
       };
     }
-  }, []);
+  }, [onViewportChange]);
 
   useLayoutEffect(() => {
     scrollpanelRef.current?.setScrollArea(scrollWidth, scrollHeight);

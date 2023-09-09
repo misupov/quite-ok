@@ -109,12 +109,19 @@ export class ScrollPanel {
   onTargetResize = (entries: ResizeObserverEntry[]) => {
     const lastEntry = entries.at(-1);
     if (lastEntry) {
+      const prevViewportSize = this.viewportSize;
       this.viewportSize = {
         width: lastEntry.contentRect.width,
         height: lastEntry.contentRect.height,
       };
+      if (
+        prevViewportSize.width !== this.viewportSize.width ||
+        prevViewportSize.height !== this.viewportSize.height
+      ) {
+        this.refreshThumbs();
+        this.scrollBy(0, 0, true);
+      }
     }
-    this.refreshThumbs();
   };
 
   onWheel = (ev: WheelEvent) => {
@@ -188,7 +195,7 @@ export class ScrollPanel {
     }
   };
 
-  scrollTo = (x: number, y: number) => {
+  scrollTo = (x: number, y: number, forceFireEvent = false) => {
     let newX = x;
     newX = Math.min(newX, this.scrollSize.width - this.viewportSize.width);
     newX = Math.max(newX, 0);
@@ -197,7 +204,11 @@ export class ScrollPanel {
     newY = Math.min(newY, this.scrollSize.height - this.viewportSize.height);
     newY = Math.max(newY, 0);
 
-    if (this.viewportOffset.x !== newX || this.viewportOffset.y !== newY) {
+    if (
+      forceFireEvent ||
+      this.viewportOffset.x !== newX ||
+      this.viewportOffset.y !== newY
+    ) {
       this.viewportOffset.x = newX;
       this.viewportOffset.y = newY;
 
@@ -205,8 +216,12 @@ export class ScrollPanel {
     }
   };
 
-  scrollBy = (dx: number, dy: number) => {
-    this.scrollTo(this.viewportOffset.x + dx, this.viewportOffset.y + dy);
+  scrollBy = (dx: number, dy: number, forceFireEvent = false) => {
+    this.scrollTo(
+      this.viewportOffset.x + dx,
+      this.viewportOffset.y + dy,
+      forceFireEvent
+    );
   };
 
   fireViewportChangeEvent = () => {
