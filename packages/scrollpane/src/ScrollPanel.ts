@@ -5,6 +5,13 @@ import iconHorizontal from "./scroll-icons/horizontal.svg";
 import { getCursorByAngle, hypoth, startRafAnimation } from "./utils";
 import { ScrollBar } from "./ScrollBar";
 
+export type ViewportChangeEvent = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
 type Point = {
   x: number;
   y: number;
@@ -16,10 +23,6 @@ type Size = {
 };
 
 export class ScrollPanel {
-  private readonly iconBothUrl: string;
-  private readonly iconVerticalUrl: string;
-  private readonly iconHorizontalUrl: string;
-
   private readonly container: HTMLElement;
   private readonly target: HTMLElement;
   private readonly vscroll: ScrollBar;
@@ -27,14 +30,28 @@ export class ScrollPanel {
   private readonly resizeObserver: ResizeObserver;
   private readonly emitter = new EventEmitter();
 
-  private scrollSize?: Size;
-  private viewportSize?: Size;
+  private scrollSize: Size = { width: 0, height: 0 };
+  private viewportSize: Size = { width: 0, height: 0 };
   private viewportOffset: Point = { x: 0, y: 0 };
 
   constructor(container: HTMLElement, target: HTMLElement) {
     container.style.position = "relative";
     this.vscroll = new ScrollBar(container, "v");
     this.hscroll = new ScrollBar(container, "h");
+    this.vscroll.on("scroll", (e) => {
+      this.scrollTo(
+        this.viewportOffset.x,
+        e.offset * (this.scrollSize.height - this.viewportSize.height)
+      );
+      this.refreshThumbs();
+    });
+    this.hscroll.on("scroll", (e) => {
+      this.scrollTo(
+        e.offset * (this.scrollSize.width - this.viewportSize.width),
+        this.viewportOffset.y
+      );
+      this.refreshThumbs();
+    });
 
     container.addEventListener("wheel", this.onWheel);
     container.addEventListener("mousedown", this.onMouseDown);
@@ -43,14 +60,6 @@ export class ScrollPanel {
     this.container = container;
     this.target = target;
     this.resizeObserver = resizeObserver;
-
-    this.iconBothUrl = iconBoth;
-    this.iconVerticalUrl = URL.createObjectURL(
-      new Blob([iconVertical], { type: "image/svg+xml" })
-    );
-    this.iconHorizontalUrl = URL.createObjectURL(
-      new Blob([iconHorizontal], { type: "image/svg+xml" })
-    );
   }
 
   destroy() {
@@ -59,40 +68,42 @@ export class ScrollPanel {
     this.hscroll.destroy();
     this.container.removeEventListener("wheel", this.onWheel);
     this.container.removeEventListener("mousedown", this.onMouseDown);
-
-    URL.revokeObjectURL(this.iconBothUrl);
-    URL.revokeObjectURL(this.iconVerticalUrl);
-    URL.revokeObjectURL(this.iconHorizontalUrl);
   }
 
-  on(event: "viewportchange", callback: (e: any) => void): void;
-  on(event: string, callback: (e: unknown) => void) {
+  on(event: "viewportchange", callback: (e: ViewportChangeEvent) => void): void;
+  on(event: string, callback: (e: any) => void) {
     this.emitter.on(event, callback);
   }
 
-  off(event: "viewportchange", callback: (e: any) => void): void;
-  off(event: string, callback: (e: unknown) => void) {
+  off(
+    event: "viewportchange",
+    callback: (e: ViewportChangeEvent) => void
+  ): void;
+  off(event: string, callback: (e: any) => void) {
     this.emitter.off(event, callback);
   }
 
   setScrollArea(width: number, height: number) {
     this.scrollSize = { width, height };
+    this.scrollBy(0, 0);
     this.refreshThumbs();
   }
 
   refreshThumbs = () => {
-    if (this.viewportSize && this.scrollSize) {
-      this.hscroll.updateGeometry(
-        this.viewportOffset.x,
-        this.scrollSize.width,
-        this.viewportSize.width
-      );
-      this.vscroll.updateGeometry(
-        this.viewportOffset.y,
-        this.scrollSize.height,
-        this.viewportSize.height
-      );
-    }
+    const showHScroll = this.scrollSize.width > this.viewportSize.width;
+    const showVScroll = this.scrollSize.height > this.viewportSize.height;
+    this.hscroll.updateGeometry(
+      this.viewportOffset.x,
+      this.scrollSize.width,
+      this.viewportSize.width,
+      showVScroll
+    );
+    this.vscroll.updateGeometry(
+      this.viewportOffset.y,
+      this.scrollSize.height,
+      this.viewportSize.height,
+      showHScroll
+    );
   };
 
   onTargetResize = (entries: ResizeObserverEntry[]) => {
@@ -107,20 +118,7 @@ export class ScrollPanel {
   };
 
   onWheel = (ev: WheelEvent) => {
-    if (!this.scrollSize || !this.viewportSize) {
-      return;
-    }
-
-    let newX = this.viewportOffset.x + ev.deltaX;
-    newX = Math.min(newX, this.scrollSize.width - this.viewportSize.width);
-    newX = Math.max(newX, 0);
-
-    let newY = this.viewportOffset.y + ev.deltaY;
-    newY = Math.min(newY, this.scrollSize.height - this.viewportSize.height);
-    newY = Math.max(newY, 0);
-
-    this.viewportOffset.x = newX;
-    this.viewportOffset.y = newY;
+    this.scrollBy(ev.deltaX, ev.deltaY);
     this.refreshThumbs();
     ev.preventDefault();
     // todo: call ev.preventDefault() if no further scrolling is possible
@@ -128,12 +126,25 @@ export class ScrollPanel {
 
   onMouseDown = (ev: MouseEvent) => {
     if (ev.button === 1) {
+      const canScrollHorizontally =
+        this.scrollSize.width > this.viewportSize.width;
+      const canScrollVertically =
+        this.scrollSize.height > this.viewportSize.height;
+      if (!canScrollHorizontally && !canScrollVertically) {
+        return;
+      }
       ev.preventDefault();
       const startX = ev.clientX;
       const startY = ev.clientY;
       let deltaX = 0;
       let deltaY = 0;
-      const dataUrl = `url("${this.iconBothUrl}")`;
+      let icon = iconBoth;
+      if (!canScrollHorizontally) {
+        icon = iconVertical;
+      } else if (!canScrollVertically) {
+        icon = iconHorizontal;
+      }
+      const dataUrl = `url("${icon}")`;
       const fullScreenDiv = document.createElement("div");
       fullScreenDiv.style.transform = "translateZ(0px)";
       fullScreenDiv.style.position = "fixed";
@@ -146,8 +157,7 @@ export class ScrollPanel {
         ev.clientY - 13
       }px`;
       const stopAnimation = startRafAnimation(() => {
-        this.viewportOffset.x += deltaX;
-        this.viewportOffset.y += deltaY;
+        this.scrollBy(deltaX, deltaY);
         this.refreshThumbs();
       });
       fullScreenDiv.style.cursor = "none";
@@ -163,24 +173,46 @@ export class ScrollPanel {
       };
       const body = document.body ? document.body : document.documentElement;
       body.appendChild(fullScreenDiv);
-      setTimeout(() =>
-        document.addEventListener(
-          "mousedown",
-          () => {
-            body.removeChild(fullScreenDiv);
-            stopAnimation();
-          },
-          { once: true }
-        )
-      );
-      window.addEventListener(
-        "blur",
-        () => {
+      const removeFullScreenDiv = () => {
+        try {
           body.removeChild(fullScreenDiv);
-          stopAnimation();
-        },
-        { once: true }
+        } catch {}
+        stopAnimation();
+      };
+      setTimeout(() =>
+        document.addEventListener("mousedown", removeFullScreenDiv, {
+          once: true,
+        })
       );
+      window.addEventListener("blur", removeFullScreenDiv, { once: true });
     }
+  };
+
+  scrollTo = (x: number, y: number) => {
+    let newX = x;
+    newX = Math.min(newX, this.scrollSize.width - this.viewportSize.width);
+    newX = Math.max(newX, 0);
+
+    let newY = y;
+    newY = Math.min(newY, this.scrollSize.height - this.viewportSize.height);
+    newY = Math.max(newY, 0);
+
+    if (this.viewportOffset.x !== newX || this.viewportOffset.y !== newY) {
+      this.viewportOffset.x = newX;
+      this.viewportOffset.y = newY;
+
+      this.fireViewportChangeEvent();
+    }
+  };
+
+  scrollBy = (dx: number, dy: number) => {
+    this.scrollTo(this.viewportOffset.x + dx, this.viewportOffset.y + dy);
+  };
+
+  fireViewportChangeEvent = () => {
+    this.emitter.emit("viewportchange", {
+      ...this.viewportOffset,
+      ...this.viewportSize,
+    } satisfies ViewportChangeEvent);
   };
 }

@@ -9,5 +9,6 @@ export default defineConfig({
     sourcemap: true,
   },
   cache: false,
+  external: ["react", "react/jsx-runtime", "@quite-ok/scrollpanel"],
   plugins: [typescript({ tsconfig: "tsconfig.json" })],
 });
