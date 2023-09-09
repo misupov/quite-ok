@@ -34,7 +34,7 @@ class DataSource implements GridDataSource<Item> {
 
   init(gridApi: GridApi<Item>): void {
     this.gridApi = gridApi;
-    this.gridApi.setRowCount(100000);
+    this.gridApi.setRowCount(10000);
   }
   destroy() {
     clearInterval(this.timer);
@@ -69,15 +69,13 @@ class DataSource implements GridDataSource<Item> {
 }
 
 function App() {
-  const [dataSource, setDataSource] = useState<DataSource>();
+  const [dataSource] = useState<DataSource>(() => new DataSource());
 
   useEffect(() => {
-    const ds = new DataSource();
-    setDataSource(ds);
     return () => {
-      ds.destroy();
+      dataSource.destroy();
     };
-  }, []);
+  }, [dataSource]);
 
   return (
     <>

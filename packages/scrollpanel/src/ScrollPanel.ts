@@ -125,10 +125,22 @@ export class ScrollPanel {
   };
 
   onWheel = (ev: WheelEvent) => {
+    const canScrollH =
+      (ev.deltaX > 0 &&
+        this.viewportSize.width + this.viewportOffset.x <
+          this.scrollSize.width) ||
+      (ev.deltaX < 0 && this.viewportOffset.x > 0);
+    const canScrollV =
+      (ev.deltaY > 0 &&
+        this.viewportSize.height + this.viewportOffset.y <
+          this.scrollSize.height) ||
+      (ev.deltaY < 0 && this.viewportOffset.y > 0);
+    if (!canScrollH && !canScrollV) {
+      return;
+    }
+    ev.preventDefault();
     this.scrollBy(ev.deltaX, ev.deltaY);
     this.refreshThumbs();
-    ev.preventDefault();
-    // todo: call ev.preventDefault() if no further scrolling is possible
   };
 
   onMouseDown = (ev: MouseEvent) => {

@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   ScrollPanel,
   ViewportChangeEventHandler,
 } from "@quite-ok/scrollpanel-react";
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useLayoutEffect, useState } from "react";
 
 export type CellRendererProps<TItem, TValue> = {
   item: TItem;
@@ -117,7 +116,7 @@ export function Grid<T = unknown>({
     []
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const rows: (React.ReactNode | null)[] = [];
     for (let i = firstVisibleRow; i <= lastVisibleRow; i++) {
       const yOffs = i * lineHeight - viewport.y;
