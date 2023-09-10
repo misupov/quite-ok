@@ -1,32 +1,58 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { ColumnDef, Grid, GridApi, GridDataSource } from "@quite-ok/grid";
+import {
+  ColumnDef,
+  ColumnState,
+  Grid,
+  GridApi,
+  GridDataSource,
+} from "@quite-ok/grid";
 import { Item } from "./types";
 import { countries, firstNames, lastNames } from "./consts";
 import { CountryCellRenderer } from "./cell-renderers/Country";
 
 const columnDefs: ColumnDef<Item>[] = [
-  { id: "name", field: "name" },
+  { id: "name", field: "name", header: "Name" },
   {
     id: "country",
     field: "country",
+    header: "Country",
     renderer: CountryCellRenderer,
   },
-  { id: "continent", field: "continent" },
-  { id: "language", field: "language" },
-  { id: "jan", field: "jan" },
-  { id: "feb", field: "feb" },
-  { id: "mar", field: "mar" },
-  { id: "apr", field: "apr" },
-  { id: "may", field: "may" },
-  { id: "jun", field: "jun" },
-  { id: "jul", field: "jul" },
-  { id: "aug", field: "aug" },
-  { id: "sep", field: "sep" },
-  { id: "oct", field: "oct" },
-  { id: "nov", field: "nov" },
-  { id: "dec", field: "dec" },
+  { id: "continent", field: "continent", header: "Continent" },
+  { id: "language", field: "language", header: "Language" },
+  { id: "jan", field: "jan", header: "Jan" },
+  { id: "feb", field: "feb", header: "Feb" },
+  { id: "mar", field: "mar", header: "Mar" },
+  { id: "apr", field: "apr", header: "Apr" },
+  { id: "may", field: "may", header: "May" },
+  { id: "jun", field: "jun", header: "Jun" },
+  { id: "jul", field: "jul", header: "Jul" },
+  { id: "aug", field: "aug", header: "Aug" },
+  { id: "sep", field: "sep", header: "Sep" },
+  { id: "oct", field: "oct", header: "Oct" },
+  { id: "nov", field: "nov", header: "Nov" },
+  { id: "dec", field: "dec", header: "Dec" },
 ];
+
+const columnStates = [
+  { id: "name", width: 200 },
+  { id: "country", width: 200 },
+  { id: "continent", width: 200 },
+  { id: "language", width: 200 },
+  { id: "jan", width: 200 },
+  { id: "feb", width: 200 },
+  { id: "mar", width: 200 },
+  { id: "apr", width: 200 },
+  { id: "may", width: 200 },
+  { id: "jun", width: 200 },
+  { id: "jul", width: 200 },
+  { id: "aug", width: 200 },
+  { id: "sep", width: 200 },
+  { id: "oct", width: 200 },
+  { id: "nov", width: 200 },
+  { id: "dec", width: 200 },
+] satisfies ColumnState[];
 
 class DataSource implements GridDataSource<Item> {
   private timer?: number;
@@ -90,8 +116,9 @@ function App() {
       >
         <Grid<Item>
           dataSource={dataSource}
-          lineHeight={40}
+          // lineHeight={40}
           columnDefs={columnDefs}
+          columnStates={columnStates}
         />
       </div>
       <h1>Vite + React</h1>

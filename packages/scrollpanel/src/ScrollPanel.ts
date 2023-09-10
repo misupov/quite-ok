@@ -175,8 +175,9 @@ export class ScrollPanel {
       fullScreenDiv.style.backgroundPosition = `${ev.clientX - 13}px ${
         ev.clientY - 13
       }px`;
-      const stopAnimation = startRafAnimation(() => {
-        this.scrollBy(deltaX, deltaY);
+      const stopAnimation = startRafAnimation((timeDelta) => {
+        timeDelta = (timeDelta * 60) / 1000;
+        this.scrollBy(deltaX * timeDelta, deltaY * timeDelta);
         this.refreshThumbs();
       });
       fullScreenDiv.style.cursor = "none";

@@ -36,11 +36,13 @@ export function hypoth(x: number, y: number) {
   return Math.sqrt(x ** 2 + y ** 2);
 }
 
-export function startRafAnimation(callback: () => void) {
+export function startRafAnimation(callback: (delta: number) => void) {
   let cancelled = false;
   let rAF: number;
-  const rafCallback = () => {
-    callback();
+  let now = performance.now();
+  const rafCallback = (time: number) => {
+    callback(time - now);
+    now = time;
     if (!cancelled) {
       rAF = requestAnimationFrame(rafCallback);
     }

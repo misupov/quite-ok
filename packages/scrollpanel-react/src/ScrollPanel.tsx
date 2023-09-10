@@ -48,7 +48,10 @@ export function ScrollPanel({
 
   return (
     <div ref={containerRef}>
-      <div ref={targetRef} style={{ position: "absolute", inset: 0 }}>
+      <div
+        ref={targetRef}
+        style={{ position: "absolute", inset: 0, overflow: "hidden" }}
+      >
         {children}
       </div>
     </div>

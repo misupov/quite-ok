@@ -2,7 +2,9 @@ import {
   ScrollPanel,
   ViewportChangeEventHandler,
 } from "@quite-ok/scrollpanel-react";
-import { useCallback, useLayoutEffect, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useState } from "react";
+import { GridHeader } from "./GridHeader";
+import { ColumnsApi } from "./ColumnsApi";
 
 export type CellRendererProps<TItem, TValue> = {
   item: TItem;
@@ -12,7 +14,15 @@ export type CellRendererProps<TItem, TValue> = {
 export type ColumnDef<TItem> = {
   id: string;
   field?: keyof TItem;
+  header?: string;
   renderer?: (props: CellRendererProps<TItem, keyof TItem>) => React.ReactNode;
+};
+
+export type ColumnState = {
+  id: string;
+  width: number | `${string}fr`;
+  pinned?: "left" | "right";
+  sort?: "asc" | "desc";
 };
 
 export type GridApi<T> = {
@@ -29,10 +39,12 @@ export type GridProps<T> = {
   dataSource?: GridDataSource<T>;
   lineHeight?: number;
   columnDefs: ColumnDef<T>[];
+  columnStates: ColumnState[];
 };
 
 export function Grid<T = unknown>({
   columnDefs,
+  columnStates,
   dataSource,
   lineHeight = 25,
 }: GridProps<T>) {
@@ -40,6 +52,11 @@ export function Grid<T = unknown>({
   const [rowCount, setRowCount] = useState(0);
   const [firstVisibleRow, setFirstVisibleRow] = useState(0);
   const [lastVisibleRow, setLastVisibleRow] = useState(0);
+
+  const columnsApi = useMemo(
+    () => new ColumnsApi(columnDefs, columnStates),
+    [columnDefs, columnStates]
+  );
 
   const [gridApi] = useState<GridApi<T>>({
     setRowData,
@@ -137,12 +154,25 @@ export function Grid<T = unknown>({
   ]);
 
   return (
-    <ScrollPanel
-      scrollWidth={columnDefs.length * 200}
-      scrollHeight={rowCount * lineHeight}
-      onViewportChange={onViewportChange}
+    <div
+      style={{
+        display: "grid",
+        gridTemplateRows: "auto 1fr",
+        overflow: "hidden",
+      }}
     >
-      <div style={{ position: "relative" }}>{...renderedRows}</div>
-    </ScrollPanel>
+      <GridHeader<T>
+        columnsApi={columnsApi}
+        viewportX={viewport.x}
+        viewportWidth={viewport.width}
+      />
+      <ScrollPanel
+        scrollWidth={columnDefs.length * 200}
+        scrollHeight={rowCount * lineHeight}
+        onViewportChange={onViewportChange}
+      >
+        <div style={{ position: "relative" }}>{...renderedRows}</div>
+      </ScrollPanel>
+    </div>
   );
 }
