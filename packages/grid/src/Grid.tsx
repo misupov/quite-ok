@@ -72,7 +72,7 @@ export function Grid<T = unknown>({
   );
 
   const renderRow = useCallback(
-    (key: number, left: number, top: number, item: T) => {
+    (index: number, left: number, top: number, item: T) => {
       if (item == null) {
         return null;
       }
@@ -81,7 +81,7 @@ export function Grid<T = unknown>({
       const visibleColumns = columnDefs.slice(startColumn, endColumn);
       return (
         <div
-          key={key}
+          key={index}
           style={{
             position: "absolute",
             top,
@@ -95,7 +95,11 @@ export function Grid<T = unknown>({
                 position: "absolute",
                 left: (idx + startColumn) * 200,
                 width: 200,
-                // border: "1px solid red",
+                height: lineHeight,
+                borderRight: "1px solid lightgray",
+                borderBottom: "1px solid lightgray",
+                background: index % 2 ? "#f7f7f7" : "#fff",
+                boxSizing: "border-box",
               }}
             >
               {cd.renderer
@@ -109,7 +113,7 @@ export function Grid<T = unknown>({
         </div>
       );
     },
-    [columnDefs, viewport.width]
+    [columnDefs, lineHeight, viewport.width]
   );
 
   const [renderedRows, setRenderedRows] = useState<(React.ReactNode | null)[]>(
