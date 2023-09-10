@@ -8,6 +8,11 @@ export default defineConfig({
     format: "es",
     sourcemap: true,
   },
-  external: ["react", "react/jsx-runtime", "@quite-ok/scrollpanel"],
+  external: [
+    "react",
+    "react-dom/client",
+    "react/jsx-runtime",
+    "@quite-ok/grid",
+  ],
   plugins: [typescript({ tsconfig: "tsconfig.json" })],
 });

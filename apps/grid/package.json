@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@quite-ok/grid": "workspace:^",
+    "@quite-ok/grid-react": "workspace:^",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

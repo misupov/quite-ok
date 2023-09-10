@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import { Item } from "./types";
+import { countries, firstNames, lastNames } from "./consts";
+import { CountryCellRenderer } from "./cell-renderers/Country";
 import {
   ColumnDef,
   ColumnState,
   Grid,
   GridApi,
   GridDataSource,
-} from "@quite-ok/grid";
-import { Item } from "./types";
-import { countries, firstNames, lastNames } from "./consts";
-import { CountryCellRenderer } from "./cell-renderers/Country";
+} from "@quite-ok/grid-react";
 
 const columnDefs: ColumnDef<Item>[] = [
   { id: "name", field: "name", header: "Name" },
@@ -107,8 +107,8 @@ function App() {
     <>
       <div
         style={{
-          width: "1000px",
-          height: 600,
+          width: "100%",
+          height: "100%",
           display: "grid",
           overflow: "hidden",
           position: "relative",
@@ -121,7 +121,6 @@ function App() {
           columnStates={columnStates}
         />
       </div>
-      <h1>Vite + React</h1>
     </>
   );
 }
