@@ -5,11 +5,18 @@ export class ColumnsApi<T> {
 
   private columnStatesMap: Map<string, ColumnState>;
 
+  totalWidth: number;
+
   constructor(columnDefs: ColumnDef<T>[], columnStates: ColumnState[]) {
     this.columnDefsMap = new Map();
     columnDefs.forEach((cd) => this.columnDefsMap.set(cd.id, cd));
+    let totalWidth = 0;
     this.columnStatesMap = new Map();
-    columnStates.forEach((cs) => this.columnStatesMap.set(cs.id, cs));
+    columnStates.forEach((cs) => {
+      this.columnStatesMap.set(cs.id, cs);
+      if (typeof cs.width === "number") totalWidth += cs.width;
+    });
+    this.totalWidth = totalWidth;
   }
 
   getColumn(id: string) {

@@ -93,9 +93,13 @@ export function Grid<T = unknown>({
       if (item == null) {
         return null;
       }
-      const startColumn = Math.floor(left / 200);
-      const endColumn = Math.ceil((left + viewport.width) / 200);
-      const visibleColumns = columnDefs.slice(startColumn, endColumn);
+      // const startColumn = Math.floor(left / 200);
+      // const endColumn = Math.ceil((left + viewport.width) / 200);
+      // const visibleColumns = columnDefs.slice(startColumn, endColumn);
+      const visibleColumns = columnsApi.getVisibleColumns(
+        viewport.x,
+        viewport.width
+      );
       return (
         <div
           key={index}
@@ -105,13 +109,13 @@ export function Grid<T = unknown>({
             left: -left,
           }}
         >
-          {visibleColumns.map((cd, idx) => (
+          {visibleColumns.map((cd) => (
             <div
-              key={cd.id}
+              key={cd.state.id}
               style={{
                 position: "absolute",
-                left: (idx + startColumn) * 200,
-                width: 200,
+                left: cd.offset,
+                width: cd.state.width,
                 height: lineHeight,
                 borderRight: "1px solid lightgray",
                 borderBottom: "1px solid lightgray",
@@ -119,18 +123,18 @@ export function Grid<T = unknown>({
                 boxSizing: "border-box",
               }}
             >
-              {cd.renderer
-                ? cd.renderer({
+              {cd.def.renderer
+                ? cd.def.renderer({
                     item,
-                    value: item[cd.field!] as keyof T,
+                    value: item[cd.def.field!] as keyof T,
                   })
-                : String(cd.field && item[cd.field]) ?? ""}
+                : String(cd.def.field && item[cd.def.field]) ?? ""}
             </div>
           ))}
         </div>
       );
     },
-    [columnDefs, lineHeight, viewport.width]
+    [columnsApi, lineHeight, viewport.width, viewport.x]
   );
 
   const [renderedRows, setRenderedRows] = useState<(React.ReactNode | null)[]>(
@@ -167,7 +171,7 @@ export function Grid<T = unknown>({
         viewportWidth={viewport.width}
       />
       <ScrollPanel
-        scrollWidth={columnDefs.length * 200}
+        scrollWidth={columnsApi.totalWidth}
         scrollHeight={rowCount * lineHeight}
         onViewportChange={onViewportChange}
       >
