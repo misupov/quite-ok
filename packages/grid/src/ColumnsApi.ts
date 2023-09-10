@@ -26,7 +26,7 @@ export class ColumnsApi<T> {
     for (const state of this.columnStatesMap.values()) {
       if (typeof state.width === "number") {
         const def = this.columnDefsMap.get(state.id);
-        if (def && x + state.width >= viewportX) {
+        if (def && x + state.width > viewportX) {
           result.push({ state, def, offset: x });
         }
         x += state.width;

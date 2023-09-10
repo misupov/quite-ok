@@ -11,7 +11,6 @@ export function GridHeader<T>({
   viewportX,
   viewportWidth,
 }: GridHeaderProps<T>) {
-  console.error(columnsApi.getVisibleColumns(viewportX, viewportWidth));
   return (
     <div
       style={{
