@@ -15,7 +15,7 @@ export class Viewport<T> {
   renderedRows: Map<number, GridRow<T>> = new Map();
 
   constructor(props: ViewportProps<T>) {
-    this.root = div({ position: "absolute" });
+    this.root = div({ position: "absolute", transform: "translateZ(0)" });
     this.refresh(props);
   }
 
@@ -73,13 +73,19 @@ export class Viewport<T> {
         this.root.removeChild(r.root);
       });
 
-      applyStyle(this.root, {
-        visibility: "visible",
-        left: `${left}px`,
-        top: `${top}px`,
-        width: `${width}px`,
-        height: `${(lastVisibleRow - firstVisibleRow) * props.lineHeight}px`,
-      });
+      // applyStyle(this.root, {
+      //   visibility: "visible",
+      //   left: `${left}px`,
+      //   top: `${top}px`,
+      //   width: `${width}px`,
+      //   height: `${(lastVisibleRow - firstVisibleRow) * props.lineHeight}px`,
+      // });
+      this.root.style.visibility = "visible";
+      // this.root.style.left = `${left}px`;
+      // this.root.style.top = `${top}px`;
+      this.root.style.transform = `translate(${left}px,${top}px) translateZ(0)`;
+      this.root.style.width = `${width}px`;
+      // this.root.style.height = `${(lastVisibleRow - firstVisibleRow) * props.lineHeight}px`;
     }
   }
 }

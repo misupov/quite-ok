@@ -8,6 +8,7 @@ export type ScrollEvent = {
 
 function createTrack(dir: Direction) {
   const track = document.createElement("div");
+  track.style.transform = "translateZ(0)";
   track.style.position = "absolute";
   track.style.background = "#8883";
   track.style.borderRadius = "10px";
@@ -28,6 +29,7 @@ function createTrack(dir: Direction) {
 
 function createThumb(dir: Direction) {
   const thumb = document.createElement("div");
+  thumb.style.transform = "translateZ(0)";
   thumb.style.background = "red";
   thumb.style.borderRadius = "10px";
   return thumb;
@@ -85,9 +87,14 @@ export class ScrollBar {
       window.addEventListener("pointermove", onPointerMove);
     });
 
-    track.appendChild(document.createElement("div"));
+    // track.appendChild(document.createElement("div"));
+    if (dir === "v") {
+      thumb.style.gridRow = "2/2";
+    } else {
+      thumb.style.gridColumn = "2/2";
+    }
     track.appendChild(thumb);
-    track.appendChild(document.createElement("div"));
+    // track.appendChild(document.createElement("div"));
     container.appendChild(track);
     this.container = container;
     this.track = track;

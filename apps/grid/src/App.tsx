@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { Item } from "./types";
 import { countries, firstNames, lastNames } from "./consts";
-import { CountryCellRenderer } from "./cell-renderers/Country";
+// import { CountryCellRenderer } from "./cell-renderers/Country";
 import {
   ColumnDef,
   ColumnState,
@@ -17,7 +17,7 @@ const columnDefs: ColumnDef<Item>[] = [
     id: "country",
     field: "country",
     header: "Country",
-    renderer: CountryCellRenderer,
+    // renderer: CountryCellRenderer,
   },
   { id: "continent", field: "continent", header: "Continent" },
   { id: "language", field: "language", header: "Language" },

@@ -9,7 +9,7 @@ export class GridHeader<T> {
 
   constructor(columnsApi: ColumnsApi<T>) {
     this.columnsApi = columnsApi;
-    this.root = div({ position: "relative", height: "25px" });
+    this.root = div({ position: "relative", height: "25px", transform: "translateZ(0)" });
   }
 
   refresh(viewportX: number, viewportWidth: number) {

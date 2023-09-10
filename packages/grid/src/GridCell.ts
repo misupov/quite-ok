@@ -6,6 +6,7 @@ type GridCellProps<T> = { columnDef?: ColumnDef<T>; state: ColumnState; x: numbe
 export class GridCell<T> {
   root: HTMLDivElement;
   renderer?: CellRenderer<T>;
+  innerText?: string;
 
   constructor(props: GridCellProps<T>) {
     this.root = div({ position: "absolute" });
@@ -13,7 +14,8 @@ export class GridCell<T> {
   }
 
   refresh(props: GridCellProps<T>) {
-    applyStyle(this.root, { left: `${props.x}px` });
+    // applyStyle(this.root, { left: `${props.x}px` });
+    this.root.style.transform = `translateX(${props.x}px)`;
     if (props.columnDef?.field) {
       const rendererCtor = props.columnDef?.renderer;
       if (rendererCtor) {
@@ -21,7 +23,8 @@ export class GridCell<T> {
         this.renderer.render(this.root, { item: props.item, value: props.item[props.columnDef.field] });
       } else {
         const text = String(props.item[props.columnDef.field]);
-        if (text !== this.root.innerText) {
+        if (text !== this.innerText) {
+          this.innerText = text;
           this.root.innerText = text;
         }
       }
