@@ -16,6 +16,6 @@ export class ColumnHeader {
   }
 
   updateOffset(offset: number) {
-    this.root.style.left = `${offset}px`;
+    this.root.style.transform = `translateX(${offset}px)`;
   }
 }

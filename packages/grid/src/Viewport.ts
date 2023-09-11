@@ -15,15 +15,13 @@ export class Viewport<T> {
   renderedRows: Map<number, GridRow<T>> = new Map();
 
   constructor(props: ViewportProps<T>) {
-    this.root = div({ position: "absolute", transform: "translateZ(0)" });
+    this.root = div({ position: "absolute", transform: "translate3d(0,0,0)" });
     this.refresh(props);
   }
 
   refresh(props: ViewportProps<T>) {
     const visibleColumns = props.columnApi.getColumnsBetween(props.coords.x, props.coords.width);
-    if (visibleColumns.length === 0) {
-      applyStyle(this.root, { visibility: "collapse" });
-    } else {
+    if (visibleColumns.length > 0) {
       const firstColumn = visibleColumns[0];
       const lastColumn = visibleColumns[visibleColumns.length - 1];
       const left = -props.coords.x;
@@ -80,12 +78,12 @@ export class Viewport<T> {
       //   width: `${width}px`,
       //   height: `${(lastVisibleRow - firstVisibleRow) * props.lineHeight}px`,
       // });
-      this.root.style.visibility = "visible";
+      // this.root.style.visibility = "visible";
       // this.root.style.left = `${left}px`;
       // this.root.style.top = `${top}px`;
-      this.root.style.transform = `translate(${left}px,${top}px) translateZ(0)`;
+      this.root.style.transform = `translate3d(${left}px,${top}px, 0)`;
       this.root.style.width = `${width}px`;
-      // this.root.style.height = `${(lastVisibleRow - firstVisibleRow) * props.lineHeight}px`;
+      this.root.style.height = `${(lastVisibleRow - firstVisibleRow) * props.lineHeight}px`;
     }
   }
 }

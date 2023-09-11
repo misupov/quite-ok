@@ -1,7 +1,6 @@
 import { ColumnsApi as ColumnApi } from "./ColumnApi";
 import { GridCell } from "./GridCell";
-import { Rect } from "./types";
-import { applyStyle, div } from "./ui";
+import { div } from "./ui";
 
 type GridRowProps<T> = {
   columnApi: ColumnApi<T>;
@@ -19,7 +18,7 @@ export class GridRow<T> {
   prevProps?: GridRowProps<T>;
 
   constructor(props: GridRowProps<T>) {
-    this.root = div({ position: "absolute", transform: "translateZ(0)" });
+    this.root = div({ position: "absolute", width: "100%", transform: "translate3d(0,0,0)" });
     this.refresh(props);
   }
 
@@ -29,11 +28,10 @@ export class GridRow<T> {
         return null;
       }
 
-      // applyStyle(this.root, { left: "0", right: "0", top: `${props.top}px`, height: `${props.lineHeight}px` });
-      this.root.style.left = "0";
-      this.root.style.right = "0";
-      // this.root.style.top = `${props.top}px`;
-      this.root.style.transform = `translateY(${props.top}px) translateZ(0)`;
+      const firstCol = props.columnApi.getColumnByIndex(props.firstCellIndex);
+
+      // this.root.style.inset = "0";
+      this.root.style.transform = `translate3d(${firstCol.offset}px,${props.top}px,0)`;
       this.root.style.height = `${props.lineHeight}px`;
 
       if (
@@ -55,7 +53,7 @@ export class GridRow<T> {
         const newProps = {
           columnDef: col.def,
           state: col.state,
-          x: col.offset,
+          x: col.offset - firstCol.offset,
           width: col.state.width,
           item: props.item,
         };

@@ -13,7 +13,7 @@ export class GridHeader<T> {
   }
 
   refresh(viewportX: number, viewportWidth: number) {
-    this.root.style.left = `${-viewportX}px`;
+    this.root.style.transform = `translate3d(${-viewportX}px,0,0)`;
     const visibleColumns = this.columnsApi.getColumnsBetween(viewportX, viewportWidth);
     const headersToHide = new Map(this.renderedHeaders);
     visibleColumns.forEach((c) => {

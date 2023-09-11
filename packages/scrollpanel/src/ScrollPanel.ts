@@ -40,15 +40,16 @@ export class ScrollPanel {
     this.hscroll = new ScrollBar(container, "h");
     this.vscroll.on("scroll", (e) => {
       this.scrollTo(this.viewportOffset.x, e.offset * (this.scrollSize.height - this.viewportSize.height));
-      this.refreshThumbs();
+      // this.refreshThumbs();
     });
     this.hscroll.on("scroll", (e) => {
       this.scrollTo(e.offset * (this.scrollSize.width - this.viewportSize.width), this.viewportOffset.y);
-      this.refreshThumbs();
+      // this.refreshThumbs();
     });
 
     container.addEventListener("wheel", this.onWheel);
-    container.addEventListener("mousedown", this.onMouseDown);
+    container.addEventListener("pointerdown", this.onPointerDown);
+    container.addEventListener("touchstart", this.onTouchStart);
     const resizeObserver = new ResizeObserver(this.onTargetResize);
     resizeObserver.observe(target);
     this.container = container;
@@ -61,7 +62,7 @@ export class ScrollPanel {
     this.vscroll.destroy();
     this.hscroll.destroy();
     this.container.removeEventListener("wheel", this.onWheel);
-    this.container.removeEventListener("mousedown", this.onMouseDown);
+    this.container.removeEventListener("pointerdown", this.onPointerDown);
   }
 
   on(event: "viewportchange", callback: (e: ViewportChangeEvent) => void): void;
@@ -117,7 +118,7 @@ export class ScrollPanel {
     this.refreshThumbs();
   };
 
-  onMouseDown = (ev: MouseEvent) => {
+  onPointerDown = (ev: PointerEvent) => {
     if (ev.button === 1) {
       const canScrollHorizontally = this.scrollSize.width > this.viewportSize.width;
       const canScrollVertically = this.scrollSize.height > this.viewportSize.height;
@@ -151,7 +152,7 @@ export class ScrollPanel {
         this.refreshThumbs();
       });
       fullScreenDiv.style.cursor = "none";
-      fullScreenDiv.onmousemove = (e) => {
+      fullScreenDiv.onpointermove = (e) => {
         deltaX = (e.clientX - startX) / 10;
         deltaY = (e.clientY - startY) / 10;
         const rad = Math.atan2(-deltaY, deltaX);
@@ -170,12 +171,35 @@ export class ScrollPanel {
         stopAnimation();
       };
       setTimeout(() =>
-        document.addEventListener("mousedown", removeFullScreenDiv, {
+        document.addEventListener("pointerdown", removeFullScreenDiv, {
           once: true,
         }),
       );
       window.addEventListener("blur", removeFullScreenDiv, { once: true });
     }
+  };
+
+  onTouchStart = (ev: TouchEvent) => {
+    let prevTouch = ev.touches[0];
+    const vpo = { ...this.viewportOffset };
+    ev.preventDefault();
+    const onTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.scrollBy(prevTouch.screenX - e.touches[0].screenX, prevTouch.screenY - e.touches[0].screenY);
+      prevTouch = e.touches[0];
+    };
+    const onTouchEnd = (e: TouchEvent) => {
+      this.container.removeEventListener("touchmove", onTouchMove);
+      console.error("!!!");
+    };
+    const onTouchCancel = (e: TouchEvent) => {
+      this.container.removeEventListener("touchmove", onTouchMove);
+      console.error("!!!?");
+    };
+    this.container.addEventListener("touchmove", onTouchMove);
+    this.container.addEventListener("touchend", onTouchEnd, { once: true });
+    this.container.addEventListener("touchcancel", onTouchCancel, { once: true });
   };
 
   scrollTo = (x: number, y: number, forceFireEvent = false) => {

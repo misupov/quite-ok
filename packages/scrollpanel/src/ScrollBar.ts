@@ -12,7 +12,6 @@ function createTrack(dir: Direction) {
   track.style.position = "absolute";
   track.style.background = "#8883";
   track.style.borderRadius = "10px";
-  track.style.display = "grid";
   if (dir === "v") {
     track.style.top = "0";
     track.style.right = "0";
@@ -27,11 +26,13 @@ function createTrack(dir: Direction) {
   return track;
 }
 
-function createThumb(dir: Direction) {
+function createThumb() {
   const thumb = document.createElement("div");
   thumb.style.transform = "translateZ(0)";
   thumb.style.background = "red";
   thumb.style.borderRadius = "10px";
+  thumb.style.position = "absolute";
+  thumb.style.inset = "0";
   return thumb;
 }
 
@@ -45,10 +46,20 @@ export class ScrollBar {
   constructor(container: HTMLElement, dir: Direction) {
     this.dir = dir;
     const track = createTrack(dir);
-    const thumb = createThumb(dir);
+    const thumb = createThumb();
 
+    thumb.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    thumb.addEventListener("touchmove", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
     thumb.addEventListener("pointerdown", (e) => {
       e.preventDefault();
+      e.stopPropagation();
+      thumb.setPointerCapture(e.pointerId);
       const clientRect = thumb.getBoundingClientRect();
       let clickOffset: number;
       if (dir === "v") {
@@ -57,10 +68,11 @@ export class ScrollBar {
         clickOffset = (e.clientX - clientRect.x) / clientRect.width;
       }
       const onPointerUp = () => {
-        window.removeEventListener("pointermove", onPointerMove);
+        thumb.removeEventListener("pointermove", onPointerMove);
       };
       const onPointerMove = (e: PointerEvent) => {
         e.preventDefault();
+        e.stopPropagation();
         const trackRect = track.getBoundingClientRect();
         const thumbRect = thumb.getBoundingClientRect();
         let moveOffset: number;
@@ -82,18 +94,11 @@ export class ScrollBar {
         const offset = (moveOffset - trackRectStart - thumbSizeStart) / (trackSize - thumbSize);
         this.emitter.emit("scroll", { offset } satisfies ScrollEvent);
       };
-      window.addEventListener("pointerup", onPointerUp, { once: true });
-      window.addEventListener("pointermove", onPointerMove);
+      thumb.addEventListener("pointerup", onPointerUp, { once: true });
+      thumb.addEventListener("pointermove", onPointerMove);
     });
 
-    // track.appendChild(document.createElement("div"));
-    if (dir === "v") {
-      thumb.style.gridRow = "2/2";
-    } else {
-      thumb.style.gridColumn = "2/2";
-    }
     track.appendChild(thumb);
-    // track.appendChild(document.createElement("div"));
     container.appendChild(track);
     this.container = container;
     this.track = track;
@@ -115,6 +120,7 @@ export class ScrollBar {
   }
 
   updateGeometry(viewportOffset: number, scrollSize: number, viewportSize: number, twoAxis: boolean) {
+    const trackPadding = twoAxis ? 10 : 0;
     this.track.style.opacity = scrollSize <= viewportSize ? "0" : "1";
     viewportOffset = Math.min(viewportOffset, scrollSize - viewportSize);
     let offset = viewportOffset / scrollSize;
@@ -122,18 +128,19 @@ export class ScrollBar {
 
     const size = viewportSize / scrollSize;
 
-    const gridTemplate = `${viewportOffset}fr max(20px, ${size * 100}%) ${
-      scrollSize - (viewportOffset + viewportSize)
-    }fr`;
-    const trackPadding = twoAxis ? "10px" : "0";
+    const trackRect = this.track.getBoundingClientRect();
+    const trackSize = this.dir === "v" ? trackRect.height : trackRect.width;
+    const thumbSize = Math.max(20, size * trackSize);
+    const start = Math.round((viewportOffset / (scrollSize - viewportSize)) * (trackSize - thumbSize));
+
     if (this.dir === "v") {
-      this.track.style.gridTemplateColumns = "auto";
-      this.track.style.gridTemplateRows = gridTemplate;
-      this.track.style.bottom = trackPadding;
+      this.thumb.style.transform = `translateY(${start}px)`;
+      this.thumb.style.height = `${Math.round(thumbSize)}px`;
+      this.track.style.bottom = `${trackPadding}px`;
     } else {
-      this.track.style.gridTemplateColumns = gridTemplate;
-      this.track.style.gridTemplateRows = "auto";
-      this.track.style.right = trackPadding;
+      this.thumb.style.transform = `translateX(${start}px)`;
+      this.thumb.style.width = `${Math.round(thumbSize)}px`;
+      this.track.style.right = `${trackPadding}px`;
     }
   }
 }

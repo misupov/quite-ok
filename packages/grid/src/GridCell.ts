@@ -9,7 +9,7 @@ export class GridCell<T> {
   innerText?: string;
 
   constructor(props: GridCellProps<T>) {
-    this.root = div({ position: "absolute" });
+    this.root = div({ position: "absolute", overflow: "hidden", whiteSpace: "nowrap" });
     this.refresh(props);
   }
 
