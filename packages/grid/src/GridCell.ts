@@ -1,7 +1,7 @@
 import { CellRenderer, ColumnDef, ColumnState } from ".";
 import { applyStyle, div } from "./ui";
 
-type GridCellProps<T> = { columnDef?: ColumnDef<T>; state: ColumnState; x: number; item: T };
+type GridCellProps<T> = { columnDef?: ColumnDef<T>; state: ColumnState; x: number; width: number; item: T };
 
 export class GridCell<T> {
   root: HTMLDivElement;
@@ -16,6 +16,7 @@ export class GridCell<T> {
   refresh(props: GridCellProps<T>) {
     // applyStyle(this.root, { left: `${props.x}px` });
     this.root.style.transform = `translateX(${props.x}px)`;
+    this.root.style.width = `${props.width}px`;
     if (props.columnDef?.field) {
       const rendererCtor = props.columnDef?.renderer;
       if (rendererCtor) {

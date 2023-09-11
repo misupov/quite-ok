@@ -60,6 +60,7 @@ export class ScrollBar {
         window.removeEventListener("pointermove", onPointerMove);
       };
       const onPointerMove = (e: PointerEvent) => {
+        e.preventDefault();
         const trackRect = track.getBoundingClientRect();
         const thumbRect = thumb.getBoundingClientRect();
         let moveOffset: number;
@@ -78,9 +79,7 @@ export class ScrollBar {
           thumbSize = thumbRect.width;
         }
         const thumbSizeStart = thumbSize * clickOffset;
-        const offset =
-          (moveOffset - trackRectStart - thumbSizeStart) /
-          (trackSize - thumbSize);
+        const offset = (moveOffset - trackRectStart - thumbSizeStart) / (trackSize - thumbSize);
         this.emitter.emit("scroll", { offset } satisfies ScrollEvent);
       };
       window.addEventListener("pointerup", onPointerUp, { once: true });
@@ -115,12 +114,7 @@ export class ScrollBar {
     this.emitter.off(event, callback);
   }
 
-  updateGeometry(
-    viewportOffset: number,
-    scrollSize: number,
-    viewportSize: number,
-    twoAxis: boolean
-  ) {
+  updateGeometry(viewportOffset: number, scrollSize: number, viewportSize: number, twoAxis: boolean) {
     this.track.style.opacity = scrollSize <= viewportSize ? "0" : "1";
     viewportOffset = Math.min(viewportOffset, scrollSize - viewportSize);
     let offset = viewportOffset / scrollSize;

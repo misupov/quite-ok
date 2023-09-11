@@ -52,7 +52,13 @@ export class GridRow<T> {
         const col = props.columnApi.getColumnByIndex(i);
         let cell = this.renderedCells.get(col.state.id);
         cellsToRemove.delete(col.state.id);
-        const newProps = { columnDef: col.def, state: col.state, x: col.offset, item: props.item };
+        const newProps = {
+          columnDef: col.def,
+          state: col.state,
+          x: col.offset,
+          width: col.state.width,
+          item: props.item,
+        };
         if (!cell) {
           cell = new GridCell<T>(newProps);
           this.root.appendChild(cell.root);

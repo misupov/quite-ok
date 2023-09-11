@@ -9,8 +9,6 @@ export type CellRenderer<TItem, TValue = unknown> = {
   render(container: HTMLElement, props: CellRendererProps<TItem, TValue>): void;
 };
 
-type Constructor<K> = { new (): K };
-
 export type ColumnDef<TItem> = {
   id: string;
   field?: keyof TItem;

@@ -39,17 +39,11 @@ export class ScrollPanel {
     this.vscroll = new ScrollBar(container, "v");
     this.hscroll = new ScrollBar(container, "h");
     this.vscroll.on("scroll", (e) => {
-      this.scrollTo(
-        this.viewportOffset.x,
-        e.offset * (this.scrollSize.height - this.viewportSize.height)
-      );
+      this.scrollTo(this.viewportOffset.x, e.offset * (this.scrollSize.height - this.viewportSize.height));
       this.refreshThumbs();
     });
     this.hscroll.on("scroll", (e) => {
-      this.scrollTo(
-        e.offset * (this.scrollSize.width - this.viewportSize.width),
-        this.viewportOffset.y
-      );
+      this.scrollTo(e.offset * (this.scrollSize.width - this.viewportSize.width), this.viewportOffset.y);
       this.refreshThumbs();
     });
 
@@ -75,10 +69,7 @@ export class ScrollPanel {
     this.emitter.on(event, callback);
   }
 
-  off(
-    event: "viewportchange",
-    callback: (e: ViewportChangeEvent) => void
-  ): void;
+  off(event: "viewportchange", callback: (e: ViewportChangeEvent) => void): void;
   off(event: string, callback: (e: any) => void) {
     this.emitter.off(event, callback);
   }
@@ -92,18 +83,8 @@ export class ScrollPanel {
   refreshThumbs = () => {
     const showHScroll = this.scrollSize.width > this.viewportSize.width;
     const showVScroll = this.scrollSize.height > this.viewportSize.height;
-    this.hscroll.updateGeometry(
-      this.viewportOffset.x,
-      this.scrollSize.width,
-      this.viewportSize.width,
-      showVScroll
-    );
-    this.vscroll.updateGeometry(
-      this.viewportOffset.y,
-      this.scrollSize.height,
-      this.viewportSize.height,
-      showHScroll
-    );
+    this.hscroll.updateGeometry(this.viewportOffset.x, this.scrollSize.width, this.viewportSize.width, showVScroll);
+    this.vscroll.updateGeometry(this.viewportOffset.y, this.scrollSize.height, this.viewportSize.height, showHScroll);
   };
 
   onTargetResize = (entries: ResizeObserverEntry[]) => {
@@ -114,10 +95,7 @@ export class ScrollPanel {
         width: lastEntry.contentRect.width,
         height: lastEntry.contentRect.height,
       };
-      if (
-        prevViewportSize.width !== this.viewportSize.width ||
-        prevViewportSize.height !== this.viewportSize.height
-      ) {
+      if (prevViewportSize.width !== this.viewportSize.width || prevViewportSize.height !== this.viewportSize.height) {
         this.refreshThumbs();
         this.scrollBy(0, 0, true);
       }
@@ -126,14 +104,10 @@ export class ScrollPanel {
 
   onWheel = (ev: WheelEvent) => {
     const canScrollH =
-      (ev.deltaX > 0 &&
-        this.viewportSize.width + this.viewportOffset.x <
-          this.scrollSize.width) ||
+      (ev.deltaX > 0 && this.viewportSize.width + this.viewportOffset.x < this.scrollSize.width) ||
       (ev.deltaX < 0 && this.viewportOffset.x > 0);
     const canScrollV =
-      (ev.deltaY > 0 &&
-        this.viewportSize.height + this.viewportOffset.y <
-          this.scrollSize.height) ||
+      (ev.deltaY > 0 && this.viewportSize.height + this.viewportOffset.y < this.scrollSize.height) ||
       (ev.deltaY < 0 && this.viewportOffset.y > 0);
     if (!canScrollH && !canScrollV) {
       return;
@@ -145,10 +119,8 @@ export class ScrollPanel {
 
   onMouseDown = (ev: MouseEvent) => {
     if (ev.button === 1) {
-      const canScrollHorizontally =
-        this.scrollSize.width > this.viewportSize.width;
-      const canScrollVertically =
-        this.scrollSize.height > this.viewportSize.height;
+      const canScrollHorizontally = this.scrollSize.width > this.viewportSize.width;
+      const canScrollVertically = this.scrollSize.height > this.viewportSize.height;
       if (!canScrollHorizontally && !canScrollVertically) {
         return;
       }
@@ -172,9 +144,7 @@ export class ScrollPanel {
       fullScreenDiv.style.backgroundRepeat = "no-repeat";
       fullScreenDiv.style.backgroundImage = dataUrl;
       fullScreenDiv.style.backgroundSize = "26px 26px";
-      fullScreenDiv.style.backgroundPosition = `${ev.clientX - 13}px ${
-        ev.clientY - 13
-      }px`;
+      fullScreenDiv.style.backgroundPosition = `${ev.clientX - 13}px ${ev.clientY - 13}px`;
       const stopAnimation = startRafAnimation((timeDelta) => {
         timeDelta = (timeDelta * 60) / 1000;
         this.scrollBy(deltaX * timeDelta, deltaY * timeDelta);
@@ -202,7 +172,7 @@ export class ScrollPanel {
       setTimeout(() =>
         document.addEventListener("mousedown", removeFullScreenDiv, {
           once: true,
-        })
+        }),
       );
       window.addEventListener("blur", removeFullScreenDiv, { once: true });
     }
@@ -217,11 +187,7 @@ export class ScrollPanel {
     newY = Math.min(newY, this.scrollSize.height - this.viewportSize.height);
     newY = Math.max(newY, 0);
 
-    if (
-      forceFireEvent ||
-      this.viewportOffset.x !== newX ||
-      this.viewportOffset.y !== newY
-    ) {
+    if (forceFireEvent || this.viewportOffset.x !== newX || this.viewportOffset.y !== newY) {
       this.viewportOffset.x = newX;
       this.viewportOffset.y = newY;
 
@@ -230,11 +196,7 @@ export class ScrollPanel {
   };
 
   scrollBy = (dx: number, dy: number, forceFireEvent = false) => {
-    this.scrollTo(
-      this.viewportOffset.x + dx,
-      this.viewportOffset.y + dy,
-      forceFireEvent
-    );
+    this.scrollTo(this.viewportOffset.x + dx, this.viewportOffset.y + dy, forceFireEvent);
   };
 
   fireViewportChangeEvent = () => {
